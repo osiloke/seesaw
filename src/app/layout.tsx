@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'Fleeting Inspector',
+  title: 'Seesaw',
   description: 'An ephemeral HTTP request inspector.',
 };
 

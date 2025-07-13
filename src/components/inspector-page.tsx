@@ -96,7 +96,7 @@ export default function InspectorPage() {
     <div className="flex flex-col min-h-screen bg-background text-foreground">
         <header className="p-4 md:p-8 border-b">
             <div className="container mx-auto">
-                <h1 className="text-3xl md:text-4xl font-bold text-primary font-headline">Fleeting Inspector</h1>
+                <h1 className="text-3xl md:text-4xl font-bold text-primary font-headline">Seesaw</h1>
                 <p className="text-muted-foreground mt-2">Your ephemeral HTTP request inspector.</p>
             </div>
         </header>
