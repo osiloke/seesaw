@@ -38,23 +38,30 @@ async function processRequest(request: NextRequest, sessionId: string, catchall:
 }
 
 export async function GET(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
-  return processRequest(request, params.sessionId, params.catchall);
+  const resolvedParams = await params;
+  return processRequest(request, resolvedParams.sessionId, resolvedParams.catchall);
 }
 export async function POST(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
-  return processRequest(request, params.sessionId, params.catchall);
+  const resolvedParams = await params;
+  return processRequest(request, resolvedParams.sessionId, resolvedParams.catchall);
 }
 export async function PUT(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
-  return processRequest(request, params.sessionId, params.catchall);
+  const resolvedParams = await params;
+  return processRequest(request, resolvedParams.sessionId, resolvedParams.catchall);
 }
 export async function DELETE(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
-  return processRequest(request, params.sessionId, params.catchall);
+  const resolvedParams = await params;
+  return processRequest(request, resolvedParams.sessionId, resolvedParams.catchall);
 }
 export async function PATCH(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
-  return processRequest(request, params.sessionId, params.catchall);
+  const resolvedParams = await params;
+  return processRequest(request, resolvedParams.sessionId, resolvedParams.catchall);
 }
 export async function OPTIONS(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
-  return processRequest(request, params.sessionId, params.catchall);
+  const resolvedParams = await params;
+  return processRequest(request, resolvedParams.sessionId, resolvedParams.catchall);
 }
 export async function HEAD(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
-  return processRequest(request, params.sessionId, params.catchall);
+  const resolvedParams = await params;
+  return processRequest(request, resolvedParams.sessionId, resolvedParams.catchall);
 }

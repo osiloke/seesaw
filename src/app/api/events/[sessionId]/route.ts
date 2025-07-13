@@ -3,6 +3,7 @@ import emitter from '@/lib/events';
 import type { RequestDetail } from '@/lib/types';
 
 export async function GET(request: NextRequest, { params }: { params: { sessionId: string } }) {
+  const resolvedParams = await params;
   const stream = new ReadableStream({
     start(controller) {
       const onNewRequest = (data: RequestDetail) => {
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest, { params }: { params: { sessionI
         }
       };
 
-      emitter.on(`new-request:${params.sessionId}`, onNewRequest);
+      emitter.on(`new-request:${resolvedParams.sessionId}`, onNewRequest);
 
       const heartbeat = setInterval(() => {
         try {
@@ -24,7 +25,7 @@ export async function GET(request: NextRequest, { params }: { params: { sessionI
       }, 30000);
 
       request.signal.addEventListener('abort', () => {
-        emitter.off(`new-request:${params.sessionId}`, onNewRequest);
+        emitter.off(`new-request:${resolvedParams.sessionId}`, onNewRequest);
         clearInterval(heartbeat);
         try {
           controller.close();
