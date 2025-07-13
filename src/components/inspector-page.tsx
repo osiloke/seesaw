@@ -29,10 +29,7 @@ export default function InspectorPage() {
   }, [debouncedSessionId]);
 
   const baseUrl = useMemo(() => {
-    if (typeof window !== 'undefined') {
-      return `${window.location.origin}/api/inspect/`;
-    }
-    return '';
+    return '/api/inspect/';
   }, []);
 
   const handleGenerateRandom = useCallback(() => {
@@ -102,7 +99,7 @@ export default function InspectorPage() {
                     <div className="flex flex-col gap-4">
                         <div className="flex flex-col md:flex-row items-center gap-2">
                             <div className="flex flex-grow items-center rounded-md border border-input w-full">
-                                <span className="text-sm text-muted-foreground bg-muted/50 px-3 py-2 border-r">
+                                <span className="text-sm text-muted-foreground bg-muted/50 px-3 py-2 border-r whitespace-nowrap">
                                     {baseUrl}
                                 </span>
                                 <Input 
