@@ -37,24 +37,24 @@ async function processRequest(request: NextRequest, sessionId: string, catchall:
   return NextResponse.json({ message: 'Request captured' }, { status: 200 });
 }
 
-export async function GET(request: NextRequest, { params }: { params: { sessionId: string; catchall: string[] } }) {
+export async function GET(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
   return processRequest(request, params.sessionId, params.catchall);
 }
-export async function POST(request: NextRequest, { params }: { params: { sessionId: string; catchall: string[] } }) {
+export async function POST(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
   return processRequest(request, params.sessionId, params.catchall);
 }
-export async function PUT(request: NextRequest, { params }: { params: { sessionId: string; catchall: string[] } }) {
+export async function PUT(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
   return processRequest(request, params.sessionId, params.catchall);
 }
-export async function DELETE(request: NextRequest, { params }: { params: { sessionId: string; catchall: string[] } }) {
+export async function DELETE(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
   return processRequest(request, params.sessionId, params.catchall);
 }
-export async function PATCH(request: NextRequest, { params }: { params: { sessionId: string; catchall: string[] } }) {
+export async function PATCH(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
   return processRequest(request, params.sessionId, params.catchall);
 }
-export async function OPTIONS(request: NextRequest, { params }: { params: { sessionId: string; catchall: string[] } }) {
+export async function OPTIONS(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
   return processRequest(request, params.sessionId, params.catchall);
 }
-export async function HEAD(request: NextRequest, { params }: { params: { sessionId: string; catchall:string[] } }) {
+export async function HEAD(request: NextRequest, { params }: { params: { sessionId: string; catchall?: string[] } }) {
   return processRequest(request, params.sessionId, params.catchall);
 }
