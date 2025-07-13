@@ -1,5 +1,10 @@
 import InspectorPage from '@/components/inspector-page';
+import { Suspense } from 'react';
 
 export default function Home() {
-  return <InspectorPage />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <InspectorPage />
+    </Suspense>
+  );
 }

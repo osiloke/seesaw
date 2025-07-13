@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { type RequestDetail } from '@/lib/types';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +13,8 @@ import RequestDetails from './request-details';
 import { cn } from '@/lib/utils';
 
 export default function InspectorPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [sessionId, setSessionId] = useState<string>('');
   const debouncedSessionId = useDebounce(sessionId, 500);
   const [requests, setRequests] = useState<RequestDetail[]>([]);
@@ -19,8 +22,26 @@ export default function InspectorPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   
   useEffect(() => {
-    setSessionId(crypto.randomUUID());
-  }, []);
+    const initialSessionId = searchParams.get('sessionId');
+    if (initialSessionId) {
+      setSessionId(initialSessionId);
+    } else {
+      const newId = crypto.randomUUID();
+      setSessionId(newId);
+      router.replace(`?sessionId=${newId}`, { scroll: false });
+    }
+  }, [searchParams, router]);
+
+  const updateUrl = useCallback((id: string) => {
+    router.replace(`?sessionId=${id}`, { scroll: false });
+  }, [router]);
+
+  useEffect(() => {
+    if (debouncedSessionId && debouncedSessionId !== searchParams.get('sessionId')) {
+      updateUrl(debouncedSessionId);
+    }
+  }, [debouncedSessionId, searchParams, updateUrl]);
+
 
   useEffect(() => {
     const handleScroll = () => {
