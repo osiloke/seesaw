@@ -6,24 +6,27 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { useDebounce } from "@/hooks/use-debounce";
 import { Copy, Trash2, Webhook, Shuffle } from 'lucide-react';
 import RequestDetails from './request-details';
 
 export default function InspectorPage() {
   const [sessionId, setSessionId] = useState<string>('');
+  const debouncedSessionId = useDebounce(sessionId, 500);
   const [requests, setRequests] = useState<RequestDetail[]>([]);
   const { toast } = useToast();
   
   useEffect(() => {
+    // Generate initial session ID only once on mount
     setSessionId(crypto.randomUUID());
   }, []);
 
   const endpointUrl = useMemo(() => {
-    if (typeof window !== 'undefined' && sessionId) {
-      return `${window.location.origin}/api/inspect/${sessionId}`;
+    if (typeof window !== 'undefined' && debouncedSessionId) {
+      return `${window.location.origin}/api/inspect/${debouncedSessionId}`;
     }
     return '';
-  }, [sessionId]);
+  }, [debouncedSessionId]);
 
   const baseUrl = useMemo(() => {
     if (typeof window !== 'undefined') {
@@ -33,7 +36,8 @@ export default function InspectorPage() {
   }, []);
 
   const handleGenerateRandom = useCallback(() => {
-    setSessionId(crypto.randomUUID());
+    const newId = crypto.randomUUID();
+    setSessionId(newId);
     toast({
       title: "New Session ID Generated",
       description: "A new random session ID has been created.",
@@ -41,10 +45,11 @@ export default function InspectorPage() {
   }, [toast]);
 
   useEffect(() => {
-    if (!sessionId) return;
-    setRequests([]); // Clear requests when session ID changes
+    if (!debouncedSessionId) return;
 
-    const eventSource = new EventSource(`/api/events/${sessionId}`);
+    setRequests([]); // Clear requests for new session
+
+    const eventSource = new EventSource(`/api/events/${debouncedSessionId}`);
 
     eventSource.onmessage = (event) => {
         if (event.data.startsWith('{')) {
@@ -60,10 +65,10 @@ export default function InspectorPage() {
     return () => {
       eventSource.close();
     };
-  }, [sessionId]);
+  }, [debouncedSessionId]);
 
   const handleCopy = () => {
-    if (!sessionId) return;
+    if (!endpointUrl) return;
     navigator.clipboard.writeText(endpointUrl).then(() => {
       toast({
         title: "Copied to Clipboard",
@@ -104,7 +109,7 @@ export default function InspectorPage() {
                                     type="text"
                                     value={sessionId}
                                     onChange={(e) => setSessionId(e.target.value)}
-                                    placeholder="Enter a session ID"
+                                    placeholder="Enter or generate a session ID"
                                     className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 font-code flex-grow"
                                     aria-label="Session ID"
                                 />
@@ -115,9 +120,9 @@ export default function InspectorPage() {
                         </div>
                         <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
                             <code className="flex-grow text-sm md:text-base break-all font-code">
-                                {endpointUrl || 'Enter a session ID to generate URL'}
+                                {endpointUrl || 'Enter or generate a session ID to create a URL'}
                             </code>
-                            <Button onClick={handleCopy} disabled={!sessionId}>
+                            <Button onClick={handleCopy} disabled={!endpointUrl}>
                                 <Copy className="mr-2 h-4 w-4" /> Copy URL
                             </Button>
                         </div>
