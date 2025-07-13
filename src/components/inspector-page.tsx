@@ -9,16 +9,25 @@ import { useToast } from "@/hooks/use-toast";
 import { useDebounce } from "@/hooks/use-debounce";
 import { Copy, Trash2, Webhook, Shuffle } from 'lucide-react';
 import RequestDetails from './request-details';
+import { cn } from '@/lib/utils';
 
 export default function InspectorPage() {
   const [sessionId, setSessionId] = useState<string>('');
   const debouncedSessionId = useDebounce(sessionId, 500);
   const [requests, setRequests] = useState<RequestDetail[]>([]);
   const { toast } = useToast();
+  const [isScrolled, setIsScrolled] = useState(false);
   
   useEffect(() => {
-    // Generate initial session ID only once on mount
     setSessionId(crypto.randomUUID());
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 150);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const endpointUrl = useMemo(() => {
@@ -35,6 +44,7 @@ export default function InspectorPage() {
   const handleGenerateRandom = useCallback(() => {
     const newId = crypto.randomUUID();
     setSessionId(newId);
+    setRequests([]);
     toast({
       title: "New Session ID Generated",
       description: "A new random session ID has been created.",
@@ -44,7 +54,7 @@ export default function InspectorPage() {
   useEffect(() => {
     if (!debouncedSessionId) return;
 
-    setRequests([]); // Clear requests for new session
+    setRequests([]); 
 
     const eventSource = new EventSource(`/api/events/${debouncedSessionId}`);
 
@@ -90,6 +100,23 @@ export default function InspectorPage() {
                 <p className="text-muted-foreground mt-2">Your ephemeral HTTP request inspector.</p>
             </div>
         </header>
+
+        <div className={cn(
+            "sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b transition-all duration-300 ease-in-out",
+            isScrolled ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"
+        )}>
+            <div className="container mx-auto p-4">
+                 <div className="flex items-center gap-4 p-2 bg-muted/30 rounded-lg">
+                    <code className="flex-grow text-sm md:text-base break-all font-code truncate">
+                        {endpointUrl || '...'}
+                    </code>
+                    <Button onClick={handleCopy} disabled={!endpointUrl} size="sm">
+                        <Copy className="mr-2 h-4 w-4" /> Copy URL
+                    </Button>
+                </div>
+            </div>
+        </div>
+
         <main className="flex-grow container mx-auto p-4 md:p-8">
             <Card className="mb-8 shadow-md">
                 <CardHeader>
