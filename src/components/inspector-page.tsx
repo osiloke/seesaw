@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { type RequestDetail } from '@/lib/types';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, Trash2, Webhook } from 'lucide-react';
+import { Copy, Trash2, Webhook, Shuffle } from 'lucide-react';
 import RequestDetails from './request-details';
 
 export default function InspectorPage() {
-  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string>('');
   const [requests, setRequests] = useState<RequestDetail[]>([]);
   const { toast } = useToast();
   
@@ -21,11 +22,20 @@ export default function InspectorPage() {
     if (typeof window !== 'undefined' && sessionId) {
       return `${window.location.origin}/api/inspect/${sessionId}`;
     }
-    return 'Generating URL...';
+    return '';
   }, [sessionId]);
+
+  const handleGenerateRandom = useCallback(() => {
+    setSessionId(crypto.randomUUID());
+    toast({
+      title: "New Session ID Generated",
+      description: "A new random session ID has been created.",
+    });
+  }, [toast]);
 
   useEffect(() => {
     if (!sessionId) return;
+    setRequests([]); // Clear requests when session ID changes
 
     const eventSource = new EventSource(`/api/events/${sessionId}`);
 
@@ -74,18 +84,38 @@ export default function InspectorPage() {
         <main className="flex-grow container mx-auto p-4 md:p-8">
             <Card className="mb-8 shadow-md">
                 <CardHeader>
-                    <CardTitle className="text-lg">Your Unique Endpoint URL</CardTitle>
+                    <CardTitle className="text-lg">Your Unique Endpoint</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 bg-muted/30 rounded-lg">
-                        <code className="flex-grow text-sm md:text-base break-all font-code p-2 bg-background rounded">
-                            {endpointUrl}
-                        </code>
-                        <Button onClick={handleCopy} disabled={!sessionId}>
-                            <Copy className="mr-2 h-4 w-4" /> Copy
-                        </Button>
+                    <div className="flex flex-col gap-4">
+                        <div className="flex flex-col md:flex-row items-stretch gap-2">
+                           <div className="relative flex-grow">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm hidden sm:inline-block">
+                                    {typeof window !== 'undefined' ? `${window.location.origin}/api/inspect/` : ''}
+                                </span>
+                                <Input 
+                                    type="text"
+                                    value={sessionId}
+                                    onChange={(e) => setSessionId(e.target.value)}
+                                    placeholder="Enter a custom session ID"
+                                    className="pl-3 sm:pl-[200px] font-code"
+                                    aria-label="Session ID"
+                                />
+                            </div>
+                           <Button onClick={handleGenerateRandom} variant="outline" className="flex-shrink-0">
+                                <Shuffle className="mr-2 h-4 w-4"/> Generate Random
+                            </Button>
+                        </div>
+                        <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
+                            <code className="flex-grow text-sm md:text-base break-all font-code">
+                                {endpointUrl || 'Enter a session ID to generate URL'}
+                            </code>
+                            <Button onClick={handleCopy} disabled={!sessionId}>
+                                <Copy className="mr-2 h-4 w-4" /> Copy URL
+                            </Button>
+                        </div>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-2">This URL is active only for this session. Send any HTTP request to it to see it appear below.</p>
+                    <p className="text-xs text-muted-foreground mt-2">Use the generated URL to send any HTTP request to it to see it appear below.</p>
                 </CardContent>
             </Card>
 
