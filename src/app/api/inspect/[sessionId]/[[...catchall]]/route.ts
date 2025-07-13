@@ -25,7 +25,7 @@ async function processRequest(request: NextRequest, sessionId: string, catchall:
     id: crypto.randomUUID(),
     method: request.method,
     timestamp: new Date().toISOString(),
-    ip: request.ip ?? request.headers.get('x-forwarded-for') ?? 'N/A',
+    ip: request.headers.get('x-real-ip') || request.headers.get('x-forwarded-for') || (process.env.NEXT_RUNTIME === 'nodejs' ? (request as any).socket?.remoteAddress : undefined) || 'N/A',
     headers,
     query,
     body,
