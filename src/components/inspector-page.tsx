@@ -25,6 +25,13 @@ export default function InspectorPage() {
     return '';
   }, [sessionId]);
 
+  const baseUrl = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      return `${window.location.origin}/api/inspect/`;
+    }
+    return '';
+  }, []);
+
   const handleGenerateRandom = useCallback(() => {
     setSessionId(crypto.randomUUID());
     toast({
@@ -89,16 +96,16 @@ export default function InspectorPage() {
                 <CardContent>
                     <div className="flex flex-col gap-4">
                         <div className="flex flex-col md:flex-row items-stretch gap-2">
-                           <div className="relative flex-grow">
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm hidden sm:inline-block">
-                                    {typeof window !== 'undefined' ? `${window.location.origin}/api/inspect/` : ''}
+                            <div className="flex flex-grow items-center rounded-md border border-input">
+                                <span className="text-sm text-muted-foreground bg-muted/50 px-3 py-2 border-r">
+                                    {baseUrl}
                                 </span>
                                 <Input 
                                     type="text"
                                     value={sessionId}
                                     onChange={(e) => setSessionId(e.target.value)}
-                                    placeholder="Enter a custom session ID"
-                                    className="pl-3 sm:pl-[200px] font-code"
+                                    placeholder="Enter a session ID"
+                                    className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 font-code flex-grow"
                                     aria-label="Session ID"
                                 />
                             </div>
