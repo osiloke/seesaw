@@ -198,6 +198,11 @@ export default function InspectorPage() {
         </main>
         <footer className="text-center p-4 text-sm text-muted-foreground border-t">
             <p>All data is ephemeral and will be lost when you close this page.</p>
+            {process.env.NEXT_PUBLIC_COMMIT_SHA && (
+              <p>
+                Commit: {process.env.NEXT_PUBLIC_COMMIT_SHA}
+              </p>
+            )}
         </footer>
     </div>
   );
