@@ -86,8 +86,9 @@ export default function InspectorPage() {
         }
     };
     
-    eventSource.onerror = () => {
-        eventSource.close();
+    eventSource.onerror = (error) => {
+        console.error("EventSource failed:", error);
+        // Do not close the connection here. The browser will automatically attempt to reconnect.
     };
 
     return () => {
