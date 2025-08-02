@@ -94,7 +94,7 @@ export default function InspectorPage() {
     };
     
     eventSource.onerror = (error) => {
-        console.error("EventSource failed:", error);
+        console.error("EventSource encountered an error:", error);
         // The EventSource will automatically try to reconnect on most errors.
         // We can choose to close it explicitly on certain conditions if needed.
     };
