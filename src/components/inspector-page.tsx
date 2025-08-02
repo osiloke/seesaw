@@ -27,10 +27,16 @@ export default function InspectorPage() {
       setSessionId(initialSessionId);
     } else {
       const newId = crypto.randomUUID();
-      setSessionId(newId);
       router.replace(`?sessionId=${newId}`, { scroll: false });
     }
-  }, [searchParams, router]);
+  }, []);
+
+  useEffect(() => {
+    const newId = searchParams.get('sessionId');
+    if(newId) {
+      setSessionId(newId);
+    }
+  }, [searchParams]);
 
   const updateUrl = useCallback((id: string) => {
     router.replace(`?sessionId=${id}`, { scroll: false });
@@ -52,11 +58,11 @@ export default function InspectorPage() {
   }, []);
 
   const endpointUrl = useMemo(() => {
-    if (typeof window !== 'undefined' && debouncedSessionId) {
-      return `${window.location.origin}/api/inspect/${debouncedSessionId}`;
+    if (typeof window !== 'undefined' && sessionId) {
+      return `${window.location.origin}/api/inspect/${sessionId}`;
     }
     return '';
-  }, [debouncedSessionId]);
+  }, [sessionId]);
 
   const baseUrl = useMemo(() => {
     return '/api/inspect/';
@@ -66,11 +72,12 @@ export default function InspectorPage() {
     const newId = crypto.randomUUID();
     setSessionId(newId);
     setRequests([]);
+    updateUrl(newId);
     toast({
       title: "New Session ID Generated",
       description: "A new random session ID has been created.",
     });
-  }, [toast]);
+  }, [toast, updateUrl]);
 
   useEffect(() => {
     if (!debouncedSessionId) return;
@@ -88,7 +95,8 @@ export default function InspectorPage() {
     
     eventSource.onerror = (error) => {
         console.error("EventSource failed:", error);
-        // Do not close the connection here. The browser will automatically attempt to reconnect.
+        // The EventSource will automatically try to reconnect on most errors.
+        // We can choose to close it explicitly on certain conditions if needed.
     };
 
     return () => {

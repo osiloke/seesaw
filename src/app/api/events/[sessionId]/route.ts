@@ -11,6 +11,10 @@ export async function GET(request: NextRequest, { params }: { params: { sessionI
           controller.enqueue(`data: ${JSON.stringify(data)}\n\n`);
         } catch (e) {
           console.error('Failed to enqueue data:', e);
+          try {
+            controller.error(e);
+            controller.close();
+          } catch {}
         }
       };
 
@@ -34,6 +38,11 @@ export async function GET(request: NextRequest, { params }: { params: { sessionI
         }
       });
     },
+    cancel() {
+        // This function is called when the stream is canceled by the client.
+        // You might not need to do anything here if the 'abort' event on request.signal
+        // already handles all necessary cleanup.
+    }
   });
 
   return new Response(stream, {
