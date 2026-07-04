@@ -12,6 +12,18 @@ import { Copy, Trash2, Webhook, Shuffle } from 'lucide-react';
 import RequestDetails from './request-details';
 import { cn } from '@/lib/utils';
 
+function generateUUID(): string {
+  if (typeof window !== 'undefined' && window.crypto && window.crypto.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+  // Fallback for non-secure contexts (HTTP)
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 export default function InspectorPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -26,7 +38,7 @@ export default function InspectorPage() {
     if (initialSessionId) {
       setSessionId(initialSessionId);
     } else {
-      const newId = crypto.randomUUID();
+      const newId = generateUUID();
       router.replace(`?sessionId=${newId}`, { scroll: false });
     }
   }, []);
@@ -69,7 +81,7 @@ export default function InspectorPage() {
   }, []);
 
   const handleGenerateRandom = useCallback(() => {
-    const newId = crypto.randomUUID();
+    const newId = generateUUID();
     setSessionId(newId);
     setRequests([]);
     updateUrl(newId);
