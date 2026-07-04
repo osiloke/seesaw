@@ -46,7 +46,7 @@ export default function RequestDetails({ request }: { request: RequestDetail }) 
   const queryString = Object.keys(request.query).length > 0 ? `?${new URLSearchParams(request.query).toString()}` : '';
 
   return (
-    <Card className="overflow-hidden animate-in fade-in-0 slide-in-from-top-4 duration-500">
+    <Card className="overflow-hidden animate-in fade-in-0 slide-in-from-top-4 duration-500 bg-card/60 backdrop-blur-md border-white/10 dark:border-white/5 shadow-sm">
         <div className="p-4 flex flex-col sm:flex-row sm:items-center gap-2 justify-between border-b">
             <div className="flex items-center gap-4 flex-wrap">
                 <Badge className={`text-xs font-bold w-20 justify-center border-0 ${getMethodClass(request.method)}`}>

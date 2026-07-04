@@ -164,8 +164,8 @@ export default function InspectorPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-        <header className="p-4 border-b">
+    <div className="flex flex-col min-h-screen text-foreground relative">
+        <header className="p-4 border-b bg-background/40 backdrop-blur-md">
             <div className="container mx-auto">
                 <h1 className="text-3xl font-bold text-primary font-headline">Seesaw</h1>
                 <p className="text-sm text-muted-foreground mt-1">Ephemeral HTTP request inspector.</p>
@@ -189,7 +189,7 @@ export default function InspectorPage() {
         </div>
 
         <main className="flex-grow container mx-auto p-4">
-            <Card className="mb-6 shadow-md">
+            <Card className="mb-6 shadow-md bg-card/60 backdrop-blur-md border-white/10 dark:border-white/5">
                 <CardHeader>
                     <CardTitle className="text-lg">Your Unique Endpoint</CardTitle>
                 </CardHeader>
@@ -228,7 +228,7 @@ export default function InspectorPage() {
 
             {/* How It Works Section */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <Card className="bg-muted/10 border-dashed">
+                <Card className="bg-card/40 backdrop-blur-sm border-dashed border-white/10 dark:border-white/5">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-semibold flex items-center gap-2">
                             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary font-bold">1</span>
@@ -239,7 +239,7 @@ export default function InspectorPage() {
                         Set a Session ID. Copy the endpoint URL.
                     </CardContent>
                 </Card>
-                <Card className="bg-muted/10 border-dashed">
+                <Card className="bg-card/40 backdrop-blur-sm border-dashed border-white/10 dark:border-white/5">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-semibold flex items-center gap-2">
                             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary font-bold">2</span>
@@ -250,7 +250,7 @@ export default function InspectorPage() {
                         Trigger requests via curl, Postman, or webhooks.
                     </CardContent>
                 </Card>
-                <Card className="bg-muted/10 border-dashed">
+                <Card className="bg-card/40 backdrop-blur-sm border-dashed border-white/10 dark:border-white/5">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-semibold flex items-center gap-2">
                             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary font-bold">3</span>
