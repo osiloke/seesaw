@@ -165,19 +165,19 @@ export default function InspectorPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-        <header className="p-4 md:p-8 border-b">
+        <header className="p-4 border-b">
             <div className="container mx-auto">
-                <h1 className="text-3xl md:text-4xl font-bold text-primary font-headline">Seesaw</h1>
-                <p className="text-muted-foreground mt-2">Your ephemeral HTTP request inspector.</p>
+                <h1 className="text-3xl font-bold text-primary font-headline">Seesaw</h1>
+                <p className="text-sm text-muted-foreground mt-1">Ephemeral HTTP request inspector.</p>
             </div>
         </header>
 
         <div className={cn(
-            "sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b transition-all duration-300 ease-in-out",
+            "sticky top-0 z-10 bg-background/60 backdrop-blur-xl border-b transition-all duration-500 ease-spring",
             isScrolled ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"
         )}>
-            <div className="container mx-auto p-4">
-                 <div className="flex items-center gap-4 p-2 bg-muted/30 rounded-lg">
+            <div className="container mx-auto p-2">
+                 <div className="flex items-center gap-4 p-2 bg-muted/40 rounded-lg">
                     <code className="flex-grow text-sm md:text-base break-all font-code truncate">
                         {endpointUrl || '...'}
                     </code>
@@ -188,8 +188,8 @@ export default function InspectorPage() {
             </div>
         </div>
 
-        <main className="flex-grow container mx-auto p-4 md:p-8">
-            <Card className="mb-8 shadow-md">
+        <main className="flex-grow container mx-auto p-4">
+            <Card className="mb-6 shadow-md">
                 <CardHeader>
                     <CardTitle className="text-lg">Your Unique Endpoint</CardTitle>
                 </CardHeader>
@@ -222,43 +222,43 @@ export default function InspectorPage() {
                             </Button>
                         </div>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-2">Use the generated URL to send any HTTP request to it to see it appear below.</p>
+                    <p className="text-xs text-muted-foreground mt-2">Send an HTTP request to your URL to see it appear.</p>
                 </CardContent>
             </Card>
 
             {/* How It Works Section */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <Card className="bg-muted/10 border-dashed">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-semibold flex items-center gap-2">
                             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary font-bold">1</span>
-                            Generate & Copy URL
+                            Generate URL
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="text-xs text-muted-foreground">
-                        Customize your Session ID or generate a random one. Copy the unique endpoint URL to your clipboard.
+                        Set a Session ID. Copy the endpoint URL.
                     </CardContent>
                 </Card>
                 <Card className="bg-muted/10 border-dashed">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-semibold flex items-center gap-2">
                             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary font-bold">2</span>
-                            Send HTTP Requests
+                            Send Requests
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="text-xs text-muted-foreground">
-                        Trigger requests using tools like <code>curl</code>, Postman, webhooks, or your own backend code to the copied URL.
+                        Trigger requests via curl, Postman, or webhooks.
                     </CardContent>
                 </Card>
                 <Card className="bg-muted/10 border-dashed">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-semibold flex items-center gap-2">
                             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary font-bold">3</span>
-                            Inspect in Real-Time
+                            Inspect Real-Time
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="text-xs text-muted-foreground">
-                        Watch requests instantly stream onto your page. View headers, query params, and JSON payloads immediately.
+                        Watch requests stream. View headers and payloads instantly.
                     </CardContent>
                 </Card>
             </div>
