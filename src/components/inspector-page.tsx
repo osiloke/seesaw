@@ -275,7 +275,32 @@ export default function InspectorPage() {
                     <div className="text-center py-16 border-2 border-dashed border-border rounded-lg flex flex-col items-center">
                         <Webhook className="h-12 w-12 text-muted-foreground/50 mb-4" />
                         <p className="text-muted-foreground font-semibold">Waiting for requests...</p>
-                        <p className="text-sm text-muted-foreground mt-1">Send a request to your unique URL to begin.</p>
+                        <p className="text-sm text-muted-foreground mt-1 mb-6">Send a request to your unique URL to begin.</p>
+                        <div className="bg-muted/30 p-4 rounded-md text-left w-full max-w-2xl overflow-x-auto relative group">
+                            <Button 
+                                size="icon" 
+                                variant="ghost" 
+                                className="absolute top-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => {
+                                    const curlCmd = `curl -X POST ${endpointUrl || 'https://seesaw.osiloke.com/api/inspect/example'} \\\n  -H "Content-Type: application/json" \\\n  -d '{"hello": "world"}'`;
+                                    copyToClipboard(curlCmd).then(() => {
+                                        toast({
+                                            title: "Copied to Clipboard",
+                                            description: "Example curl command copied.",
+                                        });
+                                    });
+                                }}
+                            >
+                                <Copy className="h-4 w-4" />
+                            </Button>
+                            <pre className="text-xs font-code text-muted-foreground">
+                                <code>
+{`curl -X POST ${endpointUrl || '...'} \\
+  -H "Content-Type: application/json" \\
+  -d '{"hello": "world"}'`}
+                                </code>
+                            </pre>
+                        </div>
                     </div>
                 ) : (
                     requests.map(req => <RequestDetails key={req.id} request={req} />)
