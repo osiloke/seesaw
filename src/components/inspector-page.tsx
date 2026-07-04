@@ -247,9 +247,12 @@ export default function InspectorPage() {
         </main>
         <footer className="text-center p-4 text-sm text-muted-foreground border-t">
             <p>All data is ephemeral and will be lost when you close this page.</p>
+            <p className="mt-1">
+              Created by <a href="https://github.com/osiloke" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary transition-colors">osiloke</a> • Star the project on <a href="https://github.com/osiloke/seesaw" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary transition-colors">GitHub</a>
+            </p>
             {process.env.NEXT_PUBLIC_COMMIT_SHA && (
-              <p>
-                Commit: {process.env.NEXT_PUBLIC_COMMIT_SHA}
+              <p className="mt-1 font-mono text-[10px]">
+                Commit: {process.env.NEXT_PUBLIC_COMMIT_SHA.length === 40 ? process.env.NEXT_PUBLIC_COMMIT_SHA.substring(0, 7) : process.env.NEXT_PUBLIC_COMMIT_SHA}
               </p>
             )}
         </footer>
