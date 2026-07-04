@@ -226,6 +226,43 @@ export default function InspectorPage() {
                 </CardContent>
             </Card>
 
+            {/* How It Works Section */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <Card className="bg-muted/10 border-dashed">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary font-bold">1</span>
+                            Generate & Copy URL
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-xs text-muted-foreground">
+                        Customize your Session ID or generate a random one. Copy the unique endpoint URL to your clipboard.
+                    </CardContent>
+                </Card>
+                <Card className="bg-muted/10 border-dashed">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary font-bold">2</span>
+                            Send HTTP Requests
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-xs text-muted-foreground">
+                        Trigger requests using tools like <code>curl</code>, Postman, webhooks, or your own backend code to the copied URL.
+                    </CardContent>
+                </Card>
+                <Card className="bg-muted/10 border-dashed">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary font-bold">3</span>
+                            Inspect in Real-Time
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-xs text-muted-foreground">
+                        Watch requests instantly stream onto your page. View headers, query params, and JSON payloads immediately.
+                    </CardContent>
+                </Card>
+            </div>
+
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold font-headline">Captured Requests ({requests.length})</h2>
                 <Button variant="outline" onClick={handleClear} disabled={requests.length === 0}>
