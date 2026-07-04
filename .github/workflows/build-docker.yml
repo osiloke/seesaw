@@ -60,18 +60,9 @@ jobs:
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
-    if: false
+    if: github.event_name == 'push'
     steps:
       - name: Deploy to production
         run: |
           echo "Deploying version: ${{ needs.build-and-push.outputs.image_tag }}"
-          curl -X POST "https://api.dostow.com/v1/store/sysops?api=${{ secrets.WORKSMART_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "repository": "${{ github.repository }}",
-              "branch": "${{ github.ref_name }}",
-              "commit": "${{ github.sha }}",
-              "image_tag": "${{ needs.build-and-push.outputs.image_tag }}",
-              "workflow": "${{ github.workflow }}",
-              "run_id": "${{ github.run_id }}"
-            }'
+          curl -s "https://con2-worksmart-traefik.dostow.com/api/deploy/YsBHIJHGVgG23FcaiTOBz"
