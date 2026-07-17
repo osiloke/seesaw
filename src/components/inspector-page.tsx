@@ -11,6 +11,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { Copy, Trash2, Webhook, Shuffle } from 'lucide-react';
 import RequestDetails from './request-details';
 import { cn } from '@/lib/utils';
+import { copyToClipboard } from '@/lib/clipboard';
 
 function generateUUID(): string {
   if (typeof window !== 'undefined' && window.crypto && window.crypto.randomUUID) {
@@ -21,35 +22,6 @@ function generateUUID(): string {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
-  });
-}
-
-function copyToClipboard(text: string): Promise<void> {
-  if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
-    return navigator.clipboard.writeText(text);
-  }
-  // Fallback for non-secure contexts (HTTP)
-  return new Promise((resolve, reject) => {
-    try {
-      const textArea = document.createElement("textarea");
-      textArea.value = text;
-      // Prevent scrolling on iOS
-      textArea.style.top = "0";
-      textArea.style.left = "0";
-      textArea.style.position = "fixed";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      const successful = document.execCommand('copy');
-      document.body.removeChild(textArea);
-      if (successful) {
-        resolve();
-      } else {
-        reject(new Error("Fallback copy command failed"));
-      }
-    } catch (err) {
-      reject(err);
-    }
   });
 }
 

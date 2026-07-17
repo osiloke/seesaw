@@ -10,6 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { format } from 'date-fns';
+import JsonBody from './json-body';
 
 function getMethodClass(method: string): string {
   switch (method.toUpperCase()) {
@@ -28,21 +29,23 @@ function getMethodClass(method: string): string {
   }
 }
 
-function tryFormat(body: string, headers: Record<string, string>): string {
-    const contentType = headers['content-type'] || '';
-    if (contentType.includes('application/json') && body) {
-        try {
-            return JSON.stringify(JSON.parse(body), null, 2);
-        } catch (e) {
-            return body;
-        }
-    }
-    return body;
+function isJsonContent(headers: Record<string, string>): boolean {
+  const contentType = headers['content-type'] || '';
+  return contentType.includes('application/json');
+}
+
+function tryParseJson(body: string): unknown {
+  try {
+    return JSON.parse(body);
+  } catch {
+    return null;
+  }
 }
 
 export default function RequestDetails({ request }: { request: RequestDetail }) {
   const formattedTimestamp = format(new Date(request.timestamp), "PP p");
-  const formattedBody = request.body ? tryFormat(request.body, request.headers) : '';
+  const isJson = isJsonContent(request.headers);
+  const parsedBody = isJson ? tryParseJson(request.body) : null;
   const queryString = Object.keys(request.query).length > 0 ? `?${new URLSearchParams(request.query).toString()}` : '';
 
   return (
@@ -65,27 +68,27 @@ export default function RequestDetails({ request }: { request: RequestDetail }) 
           <AccordionItem value="query" className="border-b">
             <AccordionTrigger className="px-4 py-3 font-medium hover:no-underline">Query Parameters</AccordionTrigger>
             <AccordionContent className="px-4 pb-3">
-              <pre className="text-xs p-4 bg-muted rounded-md overflow-x-auto font-code">
-                {JSON.stringify(request.query, null, 2)}
-              </pre>
+              <JsonBody data={request.query} raw={JSON.stringify(request.query, null, 2)} />
             </AccordionContent>
           </AccordionItem>
         )}
         <AccordionItem value="headers" className="border-b">
           <AccordionTrigger className="px-4 py-3 font-medium hover:no-underline">Headers</AccordionTrigger>
           <AccordionContent className="px-4 pb-3">
-            <pre className="text-xs p-4 bg-muted rounded-md overflow-x-auto font-code">
-              {JSON.stringify(request.headers, null, 2)}
-            </pre>
+            <JsonBody data={request.headers} raw={JSON.stringify(request.headers, null, 2)} />
           </AccordionContent>
         </AccordionItem>
         {request.body && (
           <AccordionItem value="body" className="border-b-0">
             <AccordionTrigger className="px-4 py-3 font-medium hover:no-underline">Body</AccordionTrigger>
             <AccordionContent className="px-4 pb-3">
-              <pre className="text-xs p-4 bg-muted rounded-md overflow-x-auto font-code">
-                {formattedBody}
-              </pre>
+              {isJson && parsedBody ? (
+                <JsonBody data={parsedBody} raw={request.body} />
+              ) : (
+                <pre className="text-xs p-4 bg-muted rounded-md overflow-x-auto font-code">
+                  {request.body}
+                </pre>
+              )}
             </AccordionContent>
           </AccordionItem>
         )}
