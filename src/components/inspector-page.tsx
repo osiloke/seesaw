@@ -8,7 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useDebounce } from "@/hooks/use-debounce";
-import { Copy, Trash2, Webhook, Shuffle } from 'lucide-react';
+import { Copy, Trash2, Webhook, Shuffle, ChevronDown } from 'lucide-react';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import RequestDetails from './request-details';
 import { cn } from '@/lib/utils';
 import { copyToClipboard } from '@/lib/clipboard';
@@ -33,6 +34,7 @@ export default function InspectorPage() {
   const [requests, setRequests] = useState<RequestDetail[]>([]);
   const { toast } = useToast();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showSteps, setShowSteps] = useState(false);
   
   useEffect(() => {
     const initialSessionId = searchParams.get('sessionId');
@@ -199,7 +201,8 @@ export default function InspectorPage() {
             </Card>
 
             {/* How It Works Section */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Desktop: always-visible grid */}
+            <div className="hidden md:grid grid-cols-3 gap-4 mb-6">
                 <Card className="bg-card/40 backdrop-blur-sm border-dashed border-white/10 dark:border-white/5">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-semibold flex items-center gap-2">
@@ -234,6 +237,29 @@ export default function InspectorPage() {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Mobile: collapsible */}
+            <Collapsible open={showSteps} onOpenChange={setShowSteps} className="md:hidden mb-6">
+                <CollapsibleTrigger className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors py-1">
+                    <ChevronDown className={cn("h-3.5 w-3.5 transition-transform duration-200", showSteps && "rotate-180")} />
+                    How it works
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-3 space-y-2">
+                    {[
+                        { n: "1", title: "Generate URL", desc: "Set a Session ID. Copy the endpoint URL." },
+                        { n: "2", title: "Send Requests", desc: "Trigger requests via curl, Postman, or webhooks." },
+                        { n: "3", title: "Inspect Real-Time", desc: "Watch requests stream. View headers and payloads instantly." },
+                    ].map(step => (
+                        <div key={step.n} className="flex items-start gap-3 px-3 py-2 rounded-md bg-muted/30">
+                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-[10px] text-primary font-bold flex-shrink-0 mt-0.5">{step.n}</span>
+                            <div>
+                                <p className="text-xs font-medium">{step.title}</p>
+                                <p className="text-[11px] text-muted-foreground">{step.desc}</p>
+                            </div>
+                        </div>
+                    ))}
+                </CollapsibleContent>
+            </Collapsible>
 
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold font-headline">Captured Requests ({requests.length})</h2>
